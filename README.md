@@ -8,12 +8,14 @@ Tackling the open issue “IPython / Jupyter support” I aim to implement a IPy
 
 ## How to
 
- - Install FreeCAD daily:
-    - ```
-      sudo add-apt-repository ppa:freecad-maintainers/freecad-daily
-      sudo apt-get update
-      sudo apt-get install freecad-daily
-      ``` 
+Currently tested on Ubuntu 18.04.4 LTS
+
+  - Install FreeCAD daily:
+    ```
+    sudo add-apt-repository ppa:freecad-maintainers/freecad-daily
+    sudo apt-get update
+    sudo apt-get install freecad-daily
+    ``` 
  - Install Jupyter Notebook: `sudo apt install jupyter-notebook`
  - Link external workbench from this repo to FreeCAD (use correct paths for your install): `sudo ln -s /home/kryptokommunist/Documents/Jupyter_FreeCAD/Jupyter/ /usr/shared/freecad-daily/Mod/Jupyter
 `
