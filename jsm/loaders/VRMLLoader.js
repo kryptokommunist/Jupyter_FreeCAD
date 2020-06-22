@@ -37,8 +37,8 @@ import {
 	TextureLoader,
 	Vector2,
 	Vector3
-} from "https://raw.githubusercontent.com/kryptokommunist/Jupyter_FreeCAD/master/js/three.module.js";
-import { chevrotain } from "https://raw.githubusercontent.com/kryptokommunist/Jupyter_FreeCAD/master/jsm/libs/chevrotain.module.min.js";
+} from "https://cdn.jsdelivr.net/gh/kryptokommunist/Jupyter_FreeCAD/js/three.module.js";
+import { chevrotain } from "https://cdn.jsdelivr.net/gh/kryptokommunist/Jupyter_FreeCAD/jsm/libs/chevrotain.module.min.js";
 
 /* global chevrotain */
 
