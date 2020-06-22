@@ -1,7 +1,6 @@
+# -*- coding: utf-8 -*-
 from IPython.display import display, display_html
 from pythreejs import *
-import ipywidgets
-
 
 def test():
     print("test")
