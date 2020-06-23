@@ -17,11 +17,11 @@ Currently tested on Ubuntu 18.04.4 LTS
     sudo apt-get install freecad-daily
     ``` 
  - Install Jupyter Notebook: `sudo apt install jupyter-notebook`
- - Link external workbench from this repo to FreeCAD (use correct paths for your install): `sudo ln -s /home/kryptokommunist/Documents/Jupyter_FreeCAD/Jupyter/ /usr/shared/freecad-daily/Mod/Jupyter
-`- Install pythreejs:
+ - Link external workbench from this repo to FreeCAD (use correct paths for your install): `sudo ln -s /home/kryptokommunist/Documents/Jupyter_FreeCAD/Jupyter/ /usr/shared/freecad-daily/Mod/Jupyter`
+ - Install pythreejs:
     ```bash
     pip3 install pythreejs
     jupyter nbextension install --py --symlink --sys-prefix pythreejs
     jupyter nbextension enable --py --sys-prefix pythreejs
     ```
- - Start Jupyter Notebook with `jupyter notebook`
+ - Change working directory to this folder and start Jupyter Notebook with `jupyter notebook`
