@@ -10,6 +10,12 @@ This project is part of [Google Summer of Code 2020](https://summerofcode.withgo
 
 ## How to
 
+### Server
+
+Just visit https://freecad.kryptokommun.ist and ask me for the password and you can check out the notebook without installing anything.
+
+### Local install
+
 Currently tested on Ubuntu 18.04.4 LTS
 
   - Install FreeCAD daily:
