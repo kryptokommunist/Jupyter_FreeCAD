@@ -26,10 +26,8 @@ Currently tested on Ubuntu 18.04.4 LTS
     ``` 
  - Install Jupyter Notebook: `sudo apt install jupyter-notebook`
  - Link external workbench from this repo to FreeCAD (use correct paths for your install): `sudo ln -s /home/kryptokommunist/Documents/Jupyter_FreeCAD/Jupyter/ /usr/shared/freecad-daily/Mod/Jupyter`
- - Install pythreejs:
+ - Change working directory to this folder and install requirements:
     ```bash
-    pip3 install pythreejs
-    jupyter nbextension install --py --symlink --sys-prefix pythreejs
-    jupyter nbextension enable --py --sys-prefix pythreejs
+    pip3 install -r requirements.txt
     ```
- - Change working directory to this folder and start Jupyter Notebook with `jupyter notebook`
+ -  Start Jupyter Notebook with `jupyter notebook`
