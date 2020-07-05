@@ -1,1 +1,2 @@
 psutil==5.7.0
+pythreejs==2.2.0
