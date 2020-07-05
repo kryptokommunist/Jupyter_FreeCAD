@@ -45,3 +45,15 @@ Currently tested on Ubuntu 18.04.4 LTS and Debian 10 aka Buster
     jupyter nbextension enable --py --sys-prefix first_widget
     ```
  -  Start Jupyter Notebook with `jupyter notebook`
+ 
+ ### Development
+ 
+ - Install the development modules first
+   ```bash
+   cd freecad_juypter_extension/js
+   npm install --dev
+   ```
+ - It's important to run the babel translation process when changing `example.js`
+   ```bash
+   cd freecad_juypter_extension/js && npx babel --config-file ./.babelrc lib/example.js.babel_source -o lib/example.js && npm install && cd .. && pip3 install . && jupyter nbextension install --py --symlink --sys-prefix first_widget && jupyter nbextension enable first_widget --py --sys-prefix
+   ```
