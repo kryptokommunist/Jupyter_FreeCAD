@@ -16,7 +16,7 @@ Just visit https://freecad.kryptokommun.ist and ask me for the password and you 
 
 ### Local install
 
-Currently tested on Ubuntu 18.04.4 LTS
+Currently tested on Ubuntu 18.04.4 LTS and Debian 10 aka Buster
 
   - Install FreeCAD daily:
     ```bash
