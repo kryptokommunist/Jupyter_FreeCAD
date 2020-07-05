@@ -1,0 +1,8 @@
+
+# js
+recursive-include first_widget/static *.*
+
+# Misc
+include requirements.txt
+include LICENSE
+global-exclude *.py[co]

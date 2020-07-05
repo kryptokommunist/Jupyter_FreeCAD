@@ -37,8 +37,8 @@ import {
 	TextureLoader,
 	Vector2,
 	Vector3
-} from "https://freecad.kryptokommun.ist:8080/build/three.module.js";
-import { chevrotain } from "https://freecad.kryptokommun.ist:8080/examples/jsm/libs/chevrotain.module.min.js";
+} from "three";
+import { chevrotain } from "chevrotain";
 
 /* global chevrotain */
 

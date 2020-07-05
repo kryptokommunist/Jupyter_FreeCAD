@@ -15,7 +15,7 @@ import {
 	TOUCH,
 	Vector2,
 	Vector3
-} from "https://freecad.kryptokommun.ist:8080/build/three.module.js";
+} from "three";
 
 // This set of controls performs orbiting, dollying (zooming), and panning.
 // Unlike TrackballControls, it maintains the "up" direction object.up (+Y by default).
