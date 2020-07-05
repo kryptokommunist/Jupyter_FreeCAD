@@ -30,4 +30,18 @@ Currently tested on Ubuntu 18.04.4 LTS
     ```bash
     pip3 install -r requirements.txt
     ```
+ - Install pythreejs:
+    ```bash
+    jupyter nbextension install --py --symlink --sys-prefix pythreejs
+    jupyter nbextension enable --py --sys-prefix pythreejs    
+    ```
+ - Install the custome freecad ipywidget:
+    ```bash
+    cd freecad_juypter_extension/js
+    npm install
+    cd ..
+    pip install -e .
+    jupyter nbextension install --py --symlink --sys-prefix first_widget
+    jupyter nbextension enable --py --sys-prefix first_widget
+    ```
  -  Start Jupyter Notebook with `jupyter notebook`
