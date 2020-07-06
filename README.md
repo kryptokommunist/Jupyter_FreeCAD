@@ -16,7 +16,7 @@ Just visit https://freecad.kryptokommun.ist and ask me for the password and you 
 
 ### Local install
 
-Currently tested on Ubuntu 18.04.4 LTS and Debian 10 aka Buster
+Currently tested on Ubuntu 18.04.4 LTS and Debian 10 aka Buster.
 
   - Install FreeCAD daily:
     ```bash
@@ -30,12 +30,12 @@ Currently tested on Ubuntu 18.04.4 LTS and Debian 10 aka Buster
     ```bash
     pip3 install -r requirements.txt
     ```
- - Install pythreejs:
+ - Install pythreejs to the notebook:
     ```bash
     jupyter nbextension install --py --symlink --sys-prefix pythreejs
     jupyter nbextension enable --py --sys-prefix pythreejs    
     ```
- - Install the custome freecad ipywidget:
+ - Install the custom freecad ipywidget:
     ```bash
     cd freecad_juypter_extension/js
     npm install
@@ -53,7 +53,7 @@ Currently tested on Ubuntu 18.04.4 LTS and Debian 10 aka Buster
    cd freecad_juypter_extension/js
    npm install --dev
    ```
- - It's important to run the babel translation process when changing `example.js`
+ - It's important to run the babel translation process when changing `example.js` before installing the changed module to `pip3` and the notebook:
    ```bash
    cd freecad_juypter_extension/js && npx babel --config-file ./.babelrc lib/example.js.babel_source -o lib/example.js && npm install && cd .. && pip3 install . && jupyter nbextension install --py --symlink --sys-prefix first_widget && jupyter nbextension enable first_widget --py --sys-prefix
    ```
