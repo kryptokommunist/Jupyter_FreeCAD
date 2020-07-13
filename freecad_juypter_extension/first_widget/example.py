@@ -1,5 +1,5 @@
 import ipywidgets as widgets
-from traitlets import Unicode, CFloat
+from traitlets import Unicode, CFloat, Int, List
 
 @widgets.register
 class first_widget(widgets.DOMWidget):
@@ -13,21 +13,20 @@ class first_widget(widgets.DOMWidget):
     value = Unicode('Hello World!').tag(sync=True)
 
 
-import traitlets
 import pythreejs
 
 class CubicLattice(pythreejs.Blackbox):
-    _model_name: traitlets.Unicode('CubicLatticeModel').tag(sync=True)
-    _model_module = traitlets.Unicode('first-widget').tag(sync=True)
+    _model_name: Unicode('CubicLatticeModel').tag(sync=True)
+    _model_module = Unicode('first-widget').tag(sync=True)
 
-    basis = traitlets.List(
+    basis = List(
         trait=pythreejs.Vector3(),
         default_value=[[0, 0, 0]],
         max_length=5
     ).tag(sync=True)
 
-    repetitions = traitlets.List(
-        trait=traitlets.Int(),
+    repetitions = List(
+        trait=Int(),
         default_value=[5, 5, 5],
         min_length=3,
         max_length=3
