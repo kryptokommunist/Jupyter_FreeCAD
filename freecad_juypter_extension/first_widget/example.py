@@ -17,7 +17,6 @@ import pythreejs
 
 class CubicLattice(pythreejs.Blackbox):
     _model_name: Unicode('CubicLatticeModel').tag(sync=True)
-    _model_module = Unicode('first-widget').tag(sync=True)
 
     basis = List(
         trait=pythreejs.Vector3(),
