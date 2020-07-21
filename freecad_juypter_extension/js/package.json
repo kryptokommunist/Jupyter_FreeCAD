@@ -42,6 +42,6 @@
     "@jupyter-widgets/base": "^1.0.0",
     "d3": "^4.10.2",
     "jupyter-threejs": "^2.2.0",
-    "lodash": "^4.17.4"
+    "lodash": "^4.17.19"
   }
 }
