@@ -14,7 +14,7 @@ Check out [this static demo notebook](https://kryptokommun.ist/google-summer-of-
 
 ### Current state
 
-The `freecadviewer` module was only tested with basic shapes from the `Part` workbench so far. It's something to build on. There are some open problems for which I didn't have time before the GSoC deadline (see TODO` in source):
+The `freecadviewer` module was only tested with basic shapes from the `Part` workbench so far. It's something to build on. There are some open problems for which I didn't have time before the GSoC deadline (see `TODO` in source):
 
  - highlighting of edges does not work (reason unclear, I couldn't find the error)
  - displaying the object names
