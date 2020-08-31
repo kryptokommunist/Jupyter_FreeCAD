@@ -23,6 +23,7 @@ The `freecadviewer` module was only tested with basic shapes from the `Part` wor
  - showing vertices
  - typing the document object
  - fixed light source instead of the lightsource moving with rotation
+ - problem with mocking modules in the documentation, the mock objects show up on the generated page: [example](https://ipythonfreecadviewer.readthedocs.io/en/latest/freecadviewer.html)
  
 ### Future work
 
@@ -66,4 +67,8 @@ Currently tested on Ubuntu 18.04.4 LTS and Debian 10 aka Buster.
  
  I will continue to improve the project in the future. You can find the repository [here](https://github.com/kryptokommunist/Jupyter_FreeCAD). If you use the module and encounter any issues or just find it useful, don't hesitate to post to the [forum thread](https://forum.freecadweb.org/viewtopic.php?f=8&t=46039) or let me know with a [tweet](https://twitter.com/kryptokommunist) or an issue in the [repository](https://github.com/kryptokommunist/Jupyter_FreeCAD).
 
-Thanks to my mentors [@ickby](https://forum.freecadweb.org/memberlist.php?mode=viewprofile&u=686), [@kkremitzki](https://twitter.com/thekurtwk), [@yorik](https://twitter.com/yorikvanhavre) and the entire FreeCAD community for running such an awesome project.
+Thanks to my mentors [@ickby](https://forum.freecadweb.org/memberlist.php?mode=viewprofile&u=686), [@kkremitzki](https://twitter.com/thekurtwk), [@yorik](https://twitter.com/yorikvanhavre) and the entire FreeCAD community for running such an awesome project. Thanks to  [@fluepke](https://twitter.com/fluepke) for hosting the development server.
+
+#### Documentation
+
+An API documentation is hosted on [readthedocs](https://ipythonfreecadviewer.readthedocs.io/en/latest/readme.html).
