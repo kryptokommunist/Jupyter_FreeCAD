@@ -1,4 +1,7 @@
 # FreeCAD inside Jupyter Notebook
+
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/8d90a9264138459e81d457e23d7799a8)](https://app.codacy.com/manual/kryptokommunist/Jupyter_FreeCAD?utm_source=github.com&utm_medium=referral&utm_content=kryptokommunist/Jupyter_FreeCAD&utm_campaign=Badge_Grade_Dashboard)
+
 ## Introduction
 ### A better IPython and Jupyter Notebook Integration for FreeCAD
 
