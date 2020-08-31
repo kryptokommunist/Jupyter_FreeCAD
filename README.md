@@ -6,7 +6,7 @@ Currently, FreeCAD's IPython and Jupyter Notebook integration can only provide v
 
 Tackling the open issue “IPython / Jupyter support” I aim to implement a IPython compatible visualization of FreeCAD’s 3D Open Inventor scene graph. To achieve this I intend to choose a suitable JavaScript library able to render a 3D scene graph and to implement a mapping between it and the Open Inventor scene graph. After this as a byproduct I want to implement a better WebGL export based on the scene graph instead of document objects as currently found in FreeCAD. For this I can reuse and integrate the scene graph mapping component. Lastly I want to document the results in the Wiki and create an example Jupyter notebook.
 
-This project is part of [Google Summer of Code 2020](https://summerofcode.withgoogle.com/projects/#6095514577141760) and the corresponding thread in the FreeCAD forum can be found [here](https://forum.freecadweb.org/viewtopic.php?f=8&t=46039). My full project proposal can be found [here](https://docs.google.com/document/d/1VgfsD06Qvb87S-tQazfTsyYTp14Z3EjF4V9puPVNCTQ/edit).
+This project is part of [Google Summer of Code 2020](https://summerofcode.withgoogle.com/projects/#6095514577141760) and the corresponding thread in the FreeCAD forum can be found [here](https://forum.freecadweb.org/viewtopic.php?f=8&t=46039). I wrote a blog post about the project [here](https://kryptokommun.ist/tech/2020/08/31/google-summer-of-code.html). My full project proposal can be found [here](https://docs.google.com/document/d/1VgfsD06Qvb87S-tQazfTsyYTp14Z3EjF4V9puPVNCTQ/edit).
 
 ### Demo
 
@@ -41,6 +41,7 @@ Currently tested on Ubuntu 18.04.4 LTS and Debian 10 aka Buster.
     sudo apt-get install freecad-daily
     ``` 
  - Install Jupyter Notebook: `sudo apt install jupyter-notebook`
+ - Clone this repository: `git clone git@github.com:kryptokommunist/Jupyter_FreeCAD.git`
  - Link external workbench from this repo to FreeCAD (use correct paths for your install): `sudo ln -s /home/kryptokommunist/Documents/Jupyter_FreeCAD/Jupyter/ /usr/shared/freecad-daily/Mod/Jupyter`
  - Change working directory to this folder and install requirements:
     ```bash
@@ -58,6 +59,6 @@ Currently tested on Ubuntu 18.04.4 LTS and Debian 10 aka Buster.
  
  The relevant file can be found at [`IPythonFreeCADViewer/freecadviewer.py`](blob/master/IPythonFreeCADViewer/freecadviewer.py). Tools used for development are `pylint` for linting and `mypy` for static type checking. It can be useful to run the code inside the notebook first for faster development iterations.
  
- I will continue to improve the project in the future. You can find the repository here. If you use the module and encounter any issues or just find it useful, don't hesitate to post to the [forum thread](https://forum.freecadweb.org/viewtopic.php?f=8&t=46039) or let me know with a [tweet](https://twitter.com/kryptokommunist) or an issue in the [repository](https://github.com/kryptokommunist/Jupyter_FreeCAD).
+ I will continue to improve the project in the future. You can find the repository [here](https://github.com/kryptokommunist/Jupyter_FreeCAD). If you use the module and encounter any issues or just find it useful, don't hesitate to post to the [forum thread](https://forum.freecadweb.org/viewtopic.php?f=8&t=46039) or let me know with a [tweet](https://twitter.com/kryptokommunist) or an issue in the [repository](https://github.com/kryptokommunist/Jupyter_FreeCAD).
 
 Thanks to my mentors [@ickby](https://forum.freecadweb.org/memberlist.php?mode=viewprofile&u=686), [@kkremitzki](https://twitter.com/thekurtwk), [@yorik](https://twitter.com/yorikvanhavre) and the entire FreeCAD community for running such an awesome project.
