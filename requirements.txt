@@ -1,2 +1,5 @@
 psutil==5.7.0
 pythreejs==2.2.0
+pivy==0.6.5a0
+numpy==1.16.2
+pythreejs==2.2.0
