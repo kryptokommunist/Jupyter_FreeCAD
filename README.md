@@ -1,4 +1,6 @@
-# FreeCAD inside Jupyter Notebook [![Documentation Status](https://readthedocs.org/projects/ipythonfreecadviewer/badge/?version=latest)](https://ipythonfreecadviewer.readthedocs.io/en/latest/?badge=latest) [![Codacy Badge](https://app.codacy.com/project/badge/Grade/6b9ea8e8c1df41f5a712ccf22974c39c)](https://www.codacy.com/manual/kryptokommunist/Jupyter_FreeCAD?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=kryptokommunist/Jupyter_FreeCAD&amp;utm_campaign=Badge_Grade)
+# FreeCAD inside Jupyter Notebook
+
+[![Documentation Status](https://readthedocs.org/projects/ipythonfreecadviewer/badge/?version=latest)](https://ipythonfreecadviewer.readthedocs.io/en/latest/?badge=latest) [![Codacy Badge](https://app.codacy.com/project/badge/Grade/6b9ea8e8c1df41f5a712ccf22974c39c)](https://www.codacy.com/manual/kryptokommunist/Jupyter_FreeCAD?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=kryptokommunist/Jupyter_FreeCAD&amp;utm_campaign=Badge_Grade)
 
 ## Introduction
 ### A better IPython and Jupyter Notebook Integration for FreeCAD
@@ -19,18 +21,18 @@ Check out [this static demo notebook](https://kryptokommun.ist/google-summer-of-
 
 The `freecadviewer` module was only tested with basic shapes from the `Part` workbench so far. It's something to build on. There are some open problems for which I didn't have time before the GSoC deadline (see `TODO` in source):
 
- - highlighting of edges does not work (reason unclear, I couldn't find the error)
- - displaying the object names
- - showing vertices
- - typing the document object
- - fixed light source instead of the lightsource moving with rotation
- - problem with mocking modules in the documentation, the mock objects show up on the generated page: [example](https://ipythonfreecadviewer.readthedocs.io/en/latest/freecadviewer.html)
+- highlighting of edges does not work (reason unclear, I couldn't find the error)
+- displaying the object names
+- showing vertices
+- typing the document object
+- fixed light source instead of the lightsource moving with rotation
+- problem with mocking modules in the documentation, the mock objects show up on the generated page: [example](https://ipythonfreecadviewer.readthedocs.io/en/latest/freecadviewer.html)
  
 ### Future work
 
- - expanding the viewer to more FreeCAD workbenches with different scene graph structure
- - more advanced rotation and navigation
- - implementing the so much functionality in Javascript that selection will work on a static page
+- expanding the viewer to more FreeCAD workbenches with different scene graph structure
+- more advanced rotation and navigation
+- implementing the so much functionality in Javascript that selection will work on a static page
 
 ## How to
 
@@ -38,29 +40,29 @@ The `freecadviewer` module was only tested with basic shapes from the `Part` wor
 
 Currently tested on Ubuntu 18.04.4 LTS and Debian 10 aka Buster.
 
-  - Install FreeCAD, e.g. the daily build:
-    ```bash
-    sudo add-apt-repository ppa:freecad-maintainers/freecad-daily
-    sudo apt-get update
-    sudo apt-get install freecad-daily
-    ``` 
- - Install Jupyter Notebook: `sudo apt install jupyter-notebook`
- - Clone this repository: `git clone git@github.com:kryptokommunist/Jupyter_FreeCAD.git`
- - Link external workbench from this repo to FreeCAD (use correct paths for your install): 
-   ```
-   sudo ln -s /home/kryptokommunist/Documents/Jupyter_FreeCAD/Jupyter/ /usr/shared/freecad-daily/Mod/Jupyter
-   ```
- - Change working directory to this folder and install requirements:
-    ```bash
-    pip3 install -r requirements.txt
-    ```
- - Install pythreejs to the notebook:
+- Install FreeCAD, e.g. the daily build:
+   ```bash
+   sudo add-apt-repository ppa:freecad-maintainers/freecad-daily
+   sudo apt-get update
+   sudo apt-get install freecad-daily
+   ``` 
+- Install Jupyter Notebook: `sudo apt install jupyter-notebook`
+- Clone this repository: `git clone git@github.com:kryptokommunist/Jupyter_FreeCAD.git`
+- Link external workbench from this repo to FreeCAD (use correct paths for your install): 
+  ```
+  sudo ln -s /home/kryptokommunist/Documents/Jupyter_FreeCAD/Jupyter/ /usr/shared/freecad-daily/Mod/Jupyter
+  ```
+- Change working directory to this folder and install requirements:
+  ```bash
+  pip3 install -r requirements.txt
+  ```
+- Install pythreejs to the notebook:
     ```bash
     jupyter nbextension install --py --symlink --sys-prefix pythreejs
     jupyter nbextension enable --py --sys-prefix pythreejs    
     ```
- - Start Jupyter Notebook with `jupyter notebook`
- - Check if you can render the [example notebook](https://github.com/kryptokommunist/Jupyter_FreeCAD/blob/master/FreeCAD%20inside%20Jupyter%20Notebook%20-%20Examples.ipynb). It should look somewhat like [this](https://kryptokommun.ist/google-summer-of-code-2020).
+- Start Jupyter Notebook with `jupyter notebook`
+- Check if you can render the [example notebook](https://github.com/kryptokommunist/Jupyter_FreeCAD/blob/master/FreeCAD%20inside%20Jupyter%20Notebook%20-%20Examples.ipynb). It should look somewhat like [this](https://kryptokommun.ist/google-summer-of-code-2020).
  
 ### Development
  
