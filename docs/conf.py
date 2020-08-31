@@ -28,7 +28,8 @@ author = '@kryptokommunist (Marcus Ding)'
 # extensions coming with Sphinx (named 'sphinx.ext.*') or your custom
 # ones.
 extensions = [
-    'm2r2'
+    'm2r2',
+    'sphinx.ext.autodoc'
 ]
 
 source_suffix = ['.rst', '.md']
@@ -41,7 +42,7 @@ templates_path = ['_templates']
 # This pattern also affects html_static_path and html_extra_path.
 exclude_patterns = ['_build', 'Thumbs.db', '.DS_Store']
 
-
+autodoc_mock_imports = ["FreeCADGui"]
 # -- Options for HTML output -------------------------------------------------
 
 # The theme to use for HTML and HTML Help pages.  See the documentation for
@@ -63,4 +64,4 @@ html_theme_path = [sphinx_rtd_theme.get_html_theme_path()]
 
 import os
 import sys
-sys.path.insert(0, os.path.abspath('..'))
+sys.path.insert(0, os.path.abspath('../IPythonFreeCADViewer'))
