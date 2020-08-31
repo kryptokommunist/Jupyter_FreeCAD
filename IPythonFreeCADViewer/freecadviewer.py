@@ -1,14 +1,46 @@
 # -*- coding: utf-8 -*-
-import FreeCAD, FreeCADGui
-from pythreejs import Mesh, Line, Sphere, BufferGeometry, BufferAttribute, MeshPhongMaterial, LineBasicMaterial,\
-                      Line, LineSegments, EdgesGeometry, Group, Scene, Picker, VertexNormalsHelper, PointLight,\
-                      AmbientLight, PerspectiveCamera, OrbitControls, Renderer
+
+"""
+This module contains functions that enable rendering FreeCAD Document objects inside
+an IPython environment, for example inside a Jupyter Notebook. The function needed to
+do this is `render_document`.
+"""
+
+#***************************************************************************
+#*   (c) Marcus Ding 2020                                                  *   
+#*                                                                         *
+#*   This file is part of the FreeCAD CAx development system.              *
+#*                                                                         *
+#*   This program is free software; you can redistribute it and/or modify  *
+#*   it under the terms of the GNU Lesser General Public License (LGPL)    *
+#*   as published by the Free Software Foundation; either version 2 of     *
+#*   the License, or (at your option) any later version.                   *
+#*   for detail see the LICENCE text file.                                 *
+#*                                                                         *
+#*   FreeCAD is distributed in the hope that it will be useful,            *
+#*   but WITHOUT ANY WARRANTY; without even the implied warranty of        * 
+#*   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the         *
+#*   GNU Lesser General Public License for more details.                   *
+#*                                                                         *
+#*   You should have received a copy of the GNU Library General Public     *
+#*   License along with FreeCAD; if not, write to the Free Software        * 
+#*   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  *
+#*   USA                                                                   *
+#*                                                                         *
+#*   Marcus Ding 2020                                                      *
+#***************************************************************************/
+
+import FreeCADGui
+from pythreejs import Mesh, Sphere, BufferGeometry, BufferAttribute, MeshPhongMaterial,\
+                      LineBasicMaterial, Line, LineSegments, EdgesGeometry, Group, Scene,\
+                      Picker, VertexNormalsHelper, PointLight, AmbientLight, PerspectiveCamera,\
+                      MeshLambertMaterial, OrbitControls, Renderer
 from pivy import coin
 import numpy as np
 from ipywidgets import HTML
 from IPython.display import display, DisplayHandle
 
-from typing import overload, Union, List, Tuple, Any
+from typing import Union, List, Tuple
 
 HIGHLIGHTING_COLOR = (0,1,0)
 LINE_WIDTH = 10
@@ -45,10 +77,10 @@ def transform_indices(so_node: Union[coin.SoIndexedFaceSet, coin.SoIndexedLineSe
     When ever a -1 is encountered in `so_node.coordIndex` a separate new Line or Face
     is created
     """
-    faces = list(so_node.coordIndex)
+    faces_lines = list(so_node.coordIndex)
     indices = []
     curr_line: List[int] = []
-    for i in faces:
+    for i in faces_lines:
         if i == -1:
             indices.append(curr_line)
             curr_line = []
@@ -68,31 +100,29 @@ def generate_line_vertices(line_indices: List[int], coord_vals: SoCoordValsListT
 def extract_values(res_tuple: SoCoinTupleType)\
     -> Tuple[SoCoordValsListType, SoIndicesListType, SoQuaternionType, SoVectorType, SoVectorType, int, bool]:
     """
-    Given 
+    Given the Coin3D scene graph object tuple the function will return the information
+    (coordinates, indices etc.) in an more basic python type as in the typing specification.
     """
-    # The names in the following comments refer to the
-    # "Name" field in FreeCAD > tools > Scene Inspector
-    # The types refer to the field "Inventor Tree".
+    so_face_line = res_tuple[0] 
     so_coord = res_tuple[1]
-    so_faces = res_tuple[0] # Type: SoBrepFaceSet
     so_shaded_material = res_tuple[2]
+    
     coords = list(so_coord.point)
-
     so_shaded_color = so_shaded_material.diffuseColor.getValues()[0]
     so_shaded_emissive_color = so_shaded_material.emissiveColor.getValues()[0]
     color = (so_shaded_color[0], so_shaded_color[1], so_shaded_color[2])
     emissive_color = (so_shaded_color[0], so_shaded_color[1], so_shaded_color[2])
     transparency = so_shaded_material.transparency[0]
-
-    coord_vals = [tuple(x) for x in coords]
-    indices = transform_indices(so_faces)
     
+    coord_vals = [tuple(x) for x in coords]
+    indices = transform_indices(so_face_line)
+ 
     is_line = False
-    if type(so_faces) is coin.SoIndexedLineSet:
+    if isinstance(so_face_line, coin.SoIndexedLineSet):
         is_line = True
     else:
-        if not (type(so_faces) is coin.SoIndexedFaceSet):
-            raise Exception("Unsupported type of given node: {}".format(type(so_faces)))
+        if not isinstance(so_face_line, coin.SoIndexedFaceSet):
+            raise Exception("Unsupported type of given node: {}".format(type(so_face_line)))
     
     so_transform = res_tuple[4]
     translation = tuple(so_transform.translation.getValue())
@@ -126,6 +156,7 @@ def compute_normals(faces: List[Tuple[int, int, int]], vertices: List[SoVectorTy
 
 def create_geometry(res_tuple: SoCoinTupleType,
                     name: str="", show_faces: bool=True, show_lines: bool=True) -> ThreeJSSceneGraphObjectListType:
+    """Returns PyThreeJS representations of the given Coin3D object tuples."""
     coord_vals, indices, quaternion, translation, color, transparency, is_line = extract_values(res_tuple)
     if is_line and show_lines:
         # geometry based on coin.IndexedLineSet
@@ -141,7 +172,7 @@ def create_geometry(res_tuple: SoCoinTupleType,
     return geoms
 
 def create_face_geom(coord_vals: SoCoordValsListType,
-                     face_indices: List[List[int]],
+                     face_indices: SoIndicesListType, 
                      face_color: SoVectorType,
                      transparency: float,
                      translation: SoVectorType=None,
@@ -163,14 +194,14 @@ def create_face_geom(coord_vals: SoCoordValsListType,
     vertexcolors = np.asarray([face_color]*len(coord_vals), dtype='float32')
 
 
-    faceGeometry = BufferGeometry(attributes=dict(
+    face_geometry = BufferGeometry(attributes=dict(
         position=BufferAttribute(vertices, normalized=False),
         index=BufferAttribute(faces, normalized=False),
         normal=BufferAttribute(normals, normalized=False),
         color=BufferAttribute(vertexcolors, normalized=False)
     ))
     # this is used for returning to original state after highlighting
-    faceGeometry.default_color = vertexcolors 
+    face_geometry.default_color = vertexcolors 
     
     # BUG: This is a bug in pythreejs and currently does not work
     #faceGeometry.exec_three_obj_method('computeFaceNormals')
@@ -178,7 +209,7 @@ def create_face_geom(coord_vals: SoCoordValsListType,
     col = so_col_to_hex(face_color)
     material = MeshPhongMaterial(color=col, transparency=transparency,depthTest=True, depthWrite=True, metalness=0)
     object_mesh = Mesh(
-        geometry=faceGeometry,
+        geometry=face_geometry,
         material=material,
         position=[0,0,0]   # Center the cube
     )
@@ -191,7 +222,7 @@ def create_face_geom(coord_vals: SoCoordValsListType,
     return [object_mesh]
 
 def create_line_geom(coord_vals: SoCoordValsListType,
-                     indices: List[List[int]],
+                     indices: SoIndicesListType,
                      line_color: SoVectorType,
                      translation: SoVectorType=None,
                      quaternion: SoQuaternionType=None) -> ThreeJSSceneGraphObjectListType:
@@ -241,20 +272,20 @@ def bfs_traversal(node: coin.SoNode,
     """
     if print_tree:
         print(str("   " * index) + str(type(node)))
-    if not (type(node) is coin.SoSwitch or type(node) is coin.SoSeparator):
+    if not isinstance(node, (coin.SoSwitch, coin.SoSeparator)):
         return []
     coords = coordinates
     mat = material
     trans = transform
     edge_face_set = None
     for child in node:
-        if type(child) is coin.SoCoordinate3:
+        if isinstance(child, coin.SoCoordinate3):
             coords = child
-        if type(child) is coin.SoTransform:
+        if isinstance(child, coin.SoTransform):
             trans = child
-        if type(child) is coin.SoMaterial:
+        if isinstance(child, coin.SoMaterial):
             mat = child
-        if type(child) is coin.SoIndexedLineSet or type(child) is coin.SoIndexedFaceSet:
+        if isinstance(child, (coin.SoIndexedLineSet, coin.SoIndexedFaceSet)):
             edge_face_set = child
     res_children = []
     this_object_index = -1
@@ -344,12 +375,12 @@ def reset_object_highlighting(obj: ThreeJSSceneGraphObjectType) -> None:
     to it's default colors.
     """
     # case obj is a Line
-    if type(obj) is Line:
+    if isinstance(obj, Line):
         obj.material.color = obj.material.default_color
         return
     
     # case obj is a Sphere (representing a vertex)
-    if type(obj) is Sphere:
+    if isinstance(obj, Sphere):
         # TODO
         return
     
@@ -368,7 +399,6 @@ def freecad_name_from_obj3d(obj3d: ThreeJSSceneGraphObjectType) -> str:
     return txt
     
 def generate_picker(geometries: ThreeJSSceneGraphObjectListType,
-                    scene: Scene,
                     part_indices: PartIndicesType,
                     mode: str="click") -> Tuple[HTML, Picker]:
     """
@@ -380,6 +410,7 @@ def generate_picker(geometries: ThreeJSSceneGraphObjectListType,
     """
     VALUE_TYPE = "point"
     VALID_MODES = ["mousemove", "click", "dblclick"]
+    
     if mode not in VALID_MODES:
         raise Exception("Given `mode` parameter has to be on of {}, but was `{}`"
                         .format(VALID_MODES, mode))
@@ -390,7 +421,7 @@ def generate_picker(geometries: ThreeJSSceneGraphObjectListType,
     picker.shape_face_index_old = -1
     picker.last_object = None
     
-    def f(change):
+    def callback_f(change):
         """
         This functions implements highlighting and displaying the name 
         of selected faces and edges as well as vertices. You seemingly can't
@@ -406,7 +437,7 @@ def generate_picker(geometries: ThreeJSSceneGraphObjectListType,
             html.value = "<b>No selection.</b>"
             return
         
-        if type(value) is Line:
+        if isinstance(value, Line):
             if not (last_value is None):
                 reset_object_highlighting(last_value)
             value.material.color = so_col_to_hex(HIGHLIGHTING_COLOR)
@@ -414,7 +445,6 @@ def generate_picker(geometries: ThreeJSSceneGraphObjectListType,
             return
 
         face_index = int(picker.faceIndex)
-        geom = value.geometry
         part_index = part_index_by_name(get_name(value), part_indices)
         shape_face_index = index_by_face_index(part_index, face_index)        
 
@@ -438,13 +468,15 @@ def generate_picker(geometries: ThreeJSSceneGraphObjectListType,
 
         html.value = "{} <b>Face{}</b>".format(value_freecad_name, shape_face_index)
 
-    picker.observe(f, names=[VALUE_TYPE]) 
+    picker.observe(callback_f, names=[VALUE_TYPE]) 
     return html, picker
 
+# TODO : Add displaying the FreeCAD object names to the renderer
 def render_objects(root_node: coin.SoSeparator,
                    names: List[str]=[],
                    show_line_geom: bool=False,
-                   show_normals: bool=False) -> DisplayHandle:
+                   show_normals: bool=False,
+                   selection_mode: Union[str, None]="mousemove") -> DisplayHandle:
     """
     Renders any coin node containing LineSets or FaceSets.
     
@@ -458,27 +490,26 @@ def render_objects(root_node: coin.SoSeparator,
     render_face_set = True
     i = 0
     for res in bfs_traversal(root_node, print_tree=False):
-        if type(res[0]) is coin.SoIndexedFaceSet and render_face_set:
+        if isinstance(res[0], coin.SoIndexedFaceSet) and render_face_set:
             render_face_set = False
             continue
-        elif type(res[0]) is coin.SoIndexedFaceSet:
+        if isinstance(res[0], coin.SoIndexedFaceSet):
             render_face_set = True
             part_index_list = list(res[0].partIndex)
             part_indices.append(part_index_list)
-        elif type(res[0]) is coin.SoIndexedLineSet:
-            pass
         else:
             continue
-        if False:
-            geoms = create_geometry(res)
-        else:
-            geoms = create_geometry(res)
+        
+        geoms = create_geometry(res)
+        
         for obj3d in geoms:
             obj3d.name = str(res[3]) + " " + str(i) #the name of the object is `object_index i`
             i += 1
+        
         if geoms and show_normals:
             helper = VertexNormalsHelper(geom[0])
             geoms.append(helper)
+        
         for geom in geoms:
             geometries.add(geom)
     
@@ -494,9 +525,14 @@ def render_objects(root_node: coin.SoSeparator,
     children.append(geometries)
     scene = Scene(children=children)
     scene.background = "#65659a"
-  
-    html, picker = generate_picker(geometries, scene, part_indices, "mousemove") 
-    controls = [OrbitControls(controlling=camera), picker]   
+ 
+    controls = [OrbitControls(controlling=camera)]
+    html = HTML()
+
+    if selection_mode:
+        html, picker = generate_picker(geometries, part_indices, "mousemove")
+        controls.append(picker)
+    
     renderer = Renderer(camera=camera,
                     scene=scene, controls=controls,
                     width=view_width, height=view_height)
