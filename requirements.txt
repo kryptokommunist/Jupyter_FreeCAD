@@ -1,5 +1,6 @@
 psutil==5.7.0
 pythreejs==2.2.0
-pivy@https://github.com/coin3d/pivy/archive/0.6.6.a0.tar.gz
 numpy==1.16.2
 pythreejs==2.2.0
+cmake==3.18.2.post1
+pivy@https://github.com/coin3d/pivy/archive/0.6.6.a0.tar.gz
