@@ -44,6 +44,7 @@ from typing import Union, List, Tuple
 
 HIGHLIGHTING_COLOR = (0,1,0)
 LINE_WIDTH = 10
+PICKER_VALID_MODES = ["mousemove", "click", "dblclick"]
 
 # types:
 
@@ -94,6 +95,7 @@ def generate_line_vertices(line_indices: List[int], coord_vals: SoCoordValsListT
     """
     line_vertices = []
     for i in line_indices:
+        line_vertices.append(coord_vals[i])
         line_vertices.append(coord_vals[i])
     return line_vertices
 
@@ -155,10 +157,10 @@ def compute_normals(faces: List[Tuple[int, int, int]], vertices: List[SoVectorTy
     return normals
 
 def create_geometry(res_tuple: SoCoinTupleType,
-                    name: str="", show_faces: bool=True, show_lines: bool=True) -> ThreeJSSceneGraphObjectListType:
+                    name: str="", show_faces: bool=True, show_edges: bool=True) -> ThreeJSSceneGraphObjectListType:
     """Returns PyThreeJS representations of the given Coin3D object tuples."""
     coord_vals, indices, quaternion, translation, color, transparency, is_line = extract_values(res_tuple)
-    if is_line and show_lines:
+    if is_line and show_edges:
         # geometry based on coin.IndexedLineSet
         geoms = create_line_geom(coord_vals, indices, color, translation, quaternion)
     elif not is_line and show_faces:
@@ -305,17 +307,14 @@ def bfs_traversal(node: coin.SoNode,
     res.extend(res_children)
     return res
 
-def get_line_geometries(geometries: Group) -> LineSegments:
+def get_line_geometries(geom: ThreeJSSceneGraphObjectType) -> LineSegments:
     """
     Return line segments that represent the edges of the given objects mesh.
     """
-    new_geometries = Group()
-    for geom in list(geometries.children):
-        line_geom = EdgesGeometry(geom.geometry)
-        lines = LineSegments(geometry=line_geom, 
+    line_geom = EdgesGeometry(geom.geometry)
+    lines = LineSegments(geometry=line_geom, 
                  material=LineBasicMaterial(linewidth=5, color='#000000'))
-        new_geometries.add(lines)
-    return new_geometries
+    return lines
 
 def get_name(obj: Union[ThreeJSSceneGraphObjectType, None]) -> str:
     """
@@ -409,11 +408,10 @@ def generate_picker(geometries: ThreeJSSceneGraphObjectListType,
     parameter.
     """
     VALUE_TYPE = "point"
-    VALID_MODES = ["mousemove", "click", "dblclick"]
     
-    if mode not in VALID_MODES:
+    if mode not in PICKER_VALID_MODES:
         raise Exception("Given `mode` parameter has to be on of {}, but was `{}`"
-                        .format(VALID_MODES, mode))
+                        .format(PICKER_VALID_MODES, mode))
     html = HTML("<b>No selection.</b>")
     picker = Picker(
         controlling = geometries,
@@ -471,22 +469,77 @@ def generate_picker(geometries: ThreeJSSceneGraphObjectListType,
     picker.observe(callback_f, names=[VALUE_TYPE]) 
     return html, picker
 
+
+class RendererConfig():
+    """Provides a safe configuration for the PyThreeJS renderer"""
+    def __init__(self):
+        self.show_mesh = False
+        self.show_edges = True
+        self.show_faces = True
+        self.show_normals = False
+        self.selection_mode = "mousemove"
+    @property
+    def show_mesh(self):
+        return self._show_mesh
+    @show_mesh.setter
+    def show_mesh(self, value):
+        if isinstance(value, bool):
+            self._show_mesh = value
+        else:
+            raise TypeError("Must be bool.")
+    @property
+    def show_edges(self):
+        return self._show_edges
+    @show_edges.setter
+    def show_edges(self, value):
+        if isinstance(value, bool):
+            self._show_edges = value
+        else:
+            raise TypeError("Must be bool.")
+    @property
+    def show_faces(self):
+        return self._show_faces
+    @show_faces.setter
+    def show_faces(self, value):
+        if isinstance(value, bool):
+            self._show_faces = value
+        else:
+            raise TypeError("Must be bool.")
+    @property
+    def show_normals(self):
+        return self._show_normals
+    @show_normals.setter
+    def show_normals(self, value):
+        if isinstance(value, bool):
+            self._show_normals = value
+        else:
+            raise TypeError("Must be bool.")
+    @property
+    def selection_mode(self):
+        return self._selection_mode
+    @selection_mode.setter
+    def selection_mode(self, value):
+        modes_with_none = [None]
+        modes_with_none.extend(PICKER_VALID_MODES)
+        if value in modes_with_none:
+            self._selection_mode = value
+        else:
+            raise TypeError("Must be one of: {}, but got: {}".format(modes_with_none, value))
+    def show_config(self):
+        print(dict((x[0][1:], x[1]) for x in self.__dict__.items()))
+
 # TODO : Add displaying the FreeCAD object names to the renderer
 def render_objects(root_node: coin.SoSeparator,
-                   names: List[str]=[],
-                   show_line_geom: bool=False,
-                   show_normals: bool=False,
-                   selection_mode: Union[str, None]="mousemove") -> DisplayHandle:
+                   names: List[str],
+                   renderer_config: RendererConfig=RendererConfig()) -> DisplayHandle:
     """
     Renders any coin node containing LineSets or FaceSets.
-    
-    show_line_geom: Just display the Mesh.
-    show_normals: Display the vertex normals.
     """
     view_width = 600
     view_height = 600
     geometries = Group()
     part_indices = [] # contains the partIndex indices that relate triangle faces to shape faces
+    
     render_face_set = True
     i = 0
     for res in bfs_traversal(root_node, print_tree=False):
@@ -497,24 +550,27 @@ def render_objects(root_node: coin.SoSeparator,
             render_face_set = True
             part_index_list = list(res[0].partIndex)
             part_indices.append(part_index_list)
+        elif isinstance(res[0], coin.SoIndexedLineSet):
+            pass
         else:
             continue
         
-        geoms = create_geometry(res)
+        geoms = create_geometry(res, show_edges=renderer_config.show_edges, show_faces=renderer_config.show_faces)
         
         for obj3d in geoms:
             obj3d.name = str(res[3]) + " " + str(i) #the name of the object is `object_index i`
             i += 1
         
-        if geoms and show_normals:
-            helper = VertexNormalsHelper(geom[0])
-            geoms.append(helper)
         
         for geom in geoms:
-            geometries.add(geom)
+            if renderer_config.show_normals:
+                helper = VertexNormalsHelper(geom)
+                geometries.add(helper)
+            if renderer_config.show_mesh:
+                geometries.add(get_line_geometries(geom))
+            else:
+                geometries.add(geom)
     
-    if show_line_geom:
-        geometries = get_line_geometries(geometries)
         
     light = PointLight(color="white", position=[40,40,40], intensity=1.0, castShadow=True)
     ambient_light = AmbientLight(intensity=0.5)
@@ -529,7 +585,7 @@ def render_objects(root_node: coin.SoSeparator,
     controls = [OrbitControls(controlling=camera)]
     html = HTML()
 
-    if selection_mode:
+    if renderer_config.selection_mode:
         html, picker = generate_picker(geometries, part_indices, "mousemove")
         controls.append(picker)
     
@@ -549,7 +605,7 @@ def document_to_scene_graph(doc) -> Tuple[coin.SoSeparator, List[str]]:
     return root, names
 
 # TODO : Add typing after finding out how to reference the document class
-def render_document(doc) -> DisplayHandle:
+def render_document(doc, renderer_config: RendererConfig=RendererConfig()) -> DisplayHandle:
     """Display a FreeCAD document inside an IPython environment, e.g. Jupyter Notebook"""
     root, names = document_to_scene_graph(doc)
-    return render_objects(root, names)
+    return render_objects(root, names, renderer_config)
