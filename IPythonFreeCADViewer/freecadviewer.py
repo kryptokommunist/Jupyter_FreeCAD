@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 import FreeCAD, FreeCADGui
-from pythreejs import *
+from pythreejs import Mesh, Line, Sphere, BufferGeometry, BufferAttribute, MeshPhongMaterial, LineBasicMaterial,\
+                      Line, LineSegments, EdgesGeometry, Group, Scene, Picker, VertexNormalsHelper, PointLight,\
+                      AmbientLight, PerspectiveCamera, OrbitControls, Renderer
 from pivy import coin
 import numpy as np
 from ipywidgets import HTML
@@ -13,14 +15,14 @@ LINE_WIDTH = 10
 
 # types:
 
-SoIndicesType = List[List[int]]
 SoVectorType = Tuple[float, float, float]
 SoQuaternionType = Tuple[float, float, float, float]
 SoCoinTupleType = Tuple[coin.SoIndexedFaceSet, coin.SoCoordinate3, coin.SoMaterial, int, coin.SoTransform]
 ThreeJSSceneGraphObjectType = Union[Mesh, Line, Sphere]
 ThreeJSSceneGraphObjectListType = List[ThreeJSSceneGraphObjectType]
 PartIndicesType = List[List[int]]
-SoCoordValsListType = List[List[SoVectorType]]
+SoCoordValsListType = List[SoVectorType]
+SoIndicesListType = List[List[int]]
 
 def so_col_to_hex(so_color: tuple) -> str:
     """
@@ -36,7 +38,7 @@ def so_col_to_hex(so_color: tuple) -> str:
                                               color[2])
     return hex_col
 
-def transform_indices(so_node: Union[coin.SoIndexedFaceSet, coin.SoIndexedLineSet]) -> List[List[int]]:
+def transform_indices(so_node: Union[coin.SoIndexedFaceSet, coin.SoIndexedLineSet]) ->  SoIndicesListType:
     """
     Returns list of lists that represent indices from pivy.coin
     scene objects 'SoIndexedLineSet' and 'SoIndexedFaceSet'.
@@ -45,7 +47,7 @@ def transform_indices(so_node: Union[coin.SoIndexedFaceSet, coin.SoIndexedLineSe
     """
     faces = list(so_node.coordIndex)
     indices = []
-    curr_line = []
+    curr_line: List[int] = []
     for i in faces:
         if i == -1:
             indices.append(curr_line)
@@ -54,18 +56,17 @@ def transform_indices(so_node: Union[coin.SoIndexedFaceSet, coin.SoIndexedLineSe
         curr_line.append(i)
     return indices
 
-def generate_line_vertices(line_indices: List[int], coord_vals: List[int]) -> List[int]:
+def generate_line_vertices(line_indices: List[int], coord_vals: SoCoordValsListType) -> SoCoordValsListType:
     """
     Replaces indices in list with the corresponding coordinate values
     """
     line_vertices = []
     for i in line_indices:
         line_vertices.append(coord_vals[i])
-        line_vertices.append(coord_vals[i])
     return line_vertices
 
 def extract_values(res_tuple: SoCoinTupleType)\
-    -> Tuple[SoVectorType, SoIndicesType, SoQuaternionType, SoVectorType, SoVectorType, int, bool]:
+    -> Tuple[SoCoordValsListType, SoIndicesListType, SoQuaternionType, SoVectorType, SoVectorType, int, bool]:
     """
     Given 
     """
@@ -75,7 +76,7 @@ def extract_values(res_tuple: SoCoinTupleType)\
     so_coord = res_tuple[1]
     so_faces = res_tuple[0] # Type: SoBrepFaceSet
     so_shaded_material = res_tuple[2]
-    coords = tuple(so_coord.point)
+    coords = list(so_coord.point)
 
     so_shaded_color = so_shaded_material.diffuseColor.getValues()[0]
     so_shaded_emissive_color = so_shaded_material.emissiveColor.getValues()[0]
@@ -83,7 +84,7 @@ def extract_values(res_tuple: SoCoinTupleType)\
     emissive_color = (so_shaded_color[0], so_shaded_color[1], so_shaded_color[2])
     transparency = so_shaded_material.transparency[0]
 
-    coord_vals = [list(x) for x in coords]
+    coord_vals = [tuple(x) for x in coords]
     indices = transform_indices(so_faces)
     
     is_line = False
@@ -94,14 +95,12 @@ def extract_values(res_tuple: SoCoinTupleType)\
             raise Exception("Unsupported type of given node: {}".format(type(so_faces)))
     
     so_transform = res_tuple[4]
-    translation = list(so_transform.translation.getValue())
-    quaternions = list(so_transform.rotation.getValue().getValue())
+    translation = tuple(so_transform.translation.getValue())
+    quaternions = tuple(so_transform.rotation.getValue().getValue())
 
-    #print(face_indices)
-    #print(coord_vals)
     return coord_vals, indices, quaternions, translation, color, transparency, is_line
 
-def compute_normals(faces: List[SoVectorType], vertices: List[SoVectorType]) -> np.array:
+def compute_normals(faces: List[Tuple[int, int, int]], vertices: List[SoVectorType]) -> np.array:
     """
     Returns a list of normals for
     each vertex.
@@ -142,7 +141,7 @@ def create_geometry(res_tuple: SoCoinTupleType,
     return geoms
 
 def create_face_geom(coord_vals: SoCoordValsListType,
-                     face_indices: List[int],
+                     face_indices: List[List[int]],
                      face_color: SoVectorType,
                      transparency: float,
                      translation: SoVectorType=None,
@@ -192,7 +191,7 @@ def create_face_geom(coord_vals: SoCoordValsListType,
     return [object_mesh]
 
 def create_line_geom(coord_vals: SoCoordValsListType,
-                     indices: List[int],
+                     indices: List[List[int]],
                      line_color: SoVectorType,
                      translation: SoVectorType=None,
                      quaternion: SoQuaternionType=None) -> ThreeJSSceneGraphObjectListType:
@@ -232,7 +231,7 @@ def bfs_traversal(node: coin.SoNode,
                   index: int=0,
                   print_tree: bool=False,
                   depth_counter: int=0,
-                  object_index: int=0) -> SoCoinTupleType:
+                  object_index: int=0) -> List[SoCoinTupleType]:
     """
     Return list of all (SoIndexed(Line/Face)Set, SoCoordinate3, SoMaterial) tuples
     inside the scene graph.
@@ -275,7 +274,7 @@ def bfs_traversal(node: coin.SoNode,
     res.extend(res_children)
     return res
 
-def get_line_geometries(geometries: ThreeJSSceneGraphObjectListType) -> LineSegments:
+def get_line_geometries(geometries: Group) -> LineSegments:
     """
     Return line segments that represent the edges of the given objects mesh.
     """
@@ -304,8 +303,8 @@ def part_index_by_name(name: str, part_indices: PartIndicesType) -> List[int]:
     >>part_index_by_name("2 4", [[1,1,1], [2,3,4], [222]])
     [222]
     """
-    part_index = name.split()[0]
-    part_index = int(part_index)
+    part_index_str = name.split()[0]
+    part_index = int(part_index_str)
     return part_indices[part_index]
     
 def index_by_face_index(part_index: List[int], face_index: int) -> Union[int, None]:
@@ -487,7 +486,6 @@ def render_objects(root_node: coin.SoSeparator,
         geometries = get_line_geometries(geometries)
         
     light = PointLight(color="white", position=[40,40,40], intensity=1.0, castShadow=True)
-    fog = Fog(color="#3f7b9d")
     ambient_light = AmbientLight(intensity=0.5)
     camera = PerspectiveCamera(
         position=[0, -40, 20], fov=40,
