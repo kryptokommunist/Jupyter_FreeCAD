@@ -19,7 +19,7 @@
 
 project = 'IPythonFreeCADViewer'
 copyright = '2020, Marcus Ding'
-author = 'Marcus Ding'
+author = '@kryptokommunist (Marcus Ding)'
 
 
 # -- General configuration ---------------------------------------------------
@@ -55,3 +55,9 @@ html_theme = 'alabaster'
 html_static_path = ['_static']
 
 master_doc = 'index'
+
+import sphinx_rtd_theme
+
+html_theme = "sphinx_rtd_theme"
+html_theme_path = [sphinx_rtd_theme.get_html_theme_path()]
+

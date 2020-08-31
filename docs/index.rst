@@ -8,6 +8,7 @@
    :caption: Contents:
 
    readme
+   modules
 
 Indices and tables
 ==================
