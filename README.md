@@ -12,7 +12,7 @@ This project is part of [Google Summer of Code 2020](https://summerofcode.withgo
 
 Check out [this static demo notebook](https://kryptokommun.ist/google-summer-of-code-2020), it gives an idea about the functionality even though selection and other interactivity is missing.
 
-![FreeCAD rendering inside the notebook demo](https://github.com/kryptokommunist/kryptokommunist.github.io/blob/master/images/gsoc-2020-interactivity-demo.gif)
+![FreeCAD rendering inside the notebook demo](https://github.com/kryptokommunist/kryptokommunist.github.io/raw/master/images/gsoc-2020-interactivity-demo.gif)
 
 ### Current state
 
