@@ -12,6 +12,8 @@ This project is part of [Google Summer of Code 2020](https://summerofcode.withgo
 
 Check out [this static demo notebook](https://kryptokommun.ist/google-summer-of-code-2020), it gives an idea about the functionality even though selection and other interactivity is missing.
 
+![FreeCAD rendering inside the notebook demo](https://github.com/kryptokommunist/kryptokommunist.github.io/blob/master/images/gsoc-2020-interactivity-demo.gif)
+
 ### Current state
 
 The `freecadviewer` module was only tested with basic shapes from the `Part` workbench so far. It's something to build on. There are some open problems for which I didn't have time before the GSoC deadline (see `TODO` in source):
