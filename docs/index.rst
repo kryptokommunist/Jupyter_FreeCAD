@@ -8,7 +8,7 @@
    :caption: Contents:
 
    readme
-   modules
+   freecadviewer
 
 Indices and tables
 ==================
