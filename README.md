@@ -57,7 +57,7 @@ Currently tested on Ubuntu 18.04.4 LTS and Debian 10 aka Buster.
  - Start Jupyter Notebook with `jupyter notebook`
  - Check if you can render the [example notebook](https://github.com/kryptokommunist/Jupyter_FreeCAD/blob/master/FreeCAD%20inside%20Jupyter%20Notebook%20-%20Examples.ipynb). It should look somewhat like [this](https://kryptokommun.ist/google-summer-of-code-2020).
  
- ### Development
+### Development
  
  The relevant file can be found at [`IPythonFreeCADViewer/freecadviewer.py`](blob/master/IPythonFreeCADViewer/freecadviewer.py). Tools used for development are `pylint` for linting and `mypy` for static type checking. It can be useful to run the code inside the notebook first for faster development iterations.
  
