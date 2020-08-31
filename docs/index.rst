@@ -1,5 +1,5 @@
 .. IPythonFreeCADViewer documentation master file, created by
-   sphinx-quickstart on Mon Aug 31 13:34:38 2020.
+   sphinx-quickstart on Mon Aug 31 13:56:22 2020.
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
@@ -11,7 +11,6 @@ Welcome to IPythonFreeCADViewer's documentation!
    :caption: Contents:
 
 .. mdinclude:: ../README.md
-
 
 Indices and tables
 ==================
