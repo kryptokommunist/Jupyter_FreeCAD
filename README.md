@@ -8,17 +8,33 @@ Tackling the open issue “IPython / Jupyter support” I aim to implement a IPy
 
 This project is part of [Google Summer of Code 2020](https://summerofcode.withgoogle.com/projects/#6095514577141760) and the corresponding thread in the FreeCAD forum can be found [here](https://forum.freecadweb.org/viewtopic.php?f=8&t=46039). My full project proposal can be found [here](https://docs.google.com/document/d/1VgfsD06Qvb87S-tQazfTsyYTp14Z3EjF4V9puPVNCTQ/edit).
 
+### Demo
+
+Check out [this static demo notebook](https://kryptokommun.ist/google-summer-of-code-2020), it gives an idea about the functionality even though selection and other interactivity is missing.
+
+### Current state
+
+The `freecadviewer` module was only tested with basic shapes from the `Part` workbench so far. It's something to build on. There are some open problems for which I didn't have time before the GSoC deadline (see TODO` in source):
+
+ - highlighting of edges does not work (reason unclear, I couldn't find the error)
+ - displaying the object names
+ - showing vertices
+ - typing the document object
+ - fixed light source instead of the lightsource moving with rotation
+ 
+### Future work
+
+ - expanding the viewer to more FreeCAD workbenches with different scene graph structure
+ - more advanced rotation and navigation
+ - implementing the so much functionality in Javascript that selection will work on a static page
+
 ## How to
-
-### Server
-
-Just visit https://freecad.kryptokommun.ist and ask me for the password and you can check out the notebook without installing anything.
 
 ### Local install
 
 Currently tested on Ubuntu 18.04.4 LTS and Debian 10 aka Buster.
 
-  - Install FreeCAD daily:
+  - Install FreeCAD, e.g. the daily build:
     ```bash
     sudo add-apt-repository ppa:freecad-maintainers/freecad-daily
     sudo apt-get update
@@ -35,25 +51,13 @@ Currently tested on Ubuntu 18.04.4 LTS and Debian 10 aka Buster.
     jupyter nbextension install --py --symlink --sys-prefix pythreejs
     jupyter nbextension enable --py --sys-prefix pythreejs    
     ```
- - Install the custom freecad ipywidget:
-    ```bash
-    cd freecad_juypter_extension/js
-    npm install
-    cd ..
-    pip install -e .
-    jupyter nbextension install --py --symlink --sys-prefix first_widget
-    jupyter nbextension enable --py --sys-prefix first_widget
-    ```
- -  Start Jupyter Notebook with `jupyter notebook`
+ - Start Jupyter Notebook with `jupyter notebook`
+ - Check if you can render the [example notebook](https://github.com/kryptokommunist/Jupyter_FreeCAD/blob/master/FreeCAD%20inside%20Jupyter%20Notebook%20-%20Examples.ipynb). It should look somewhat like [this](https://kryptokommun.ist/google-summer-of-code-2020).
  
  ### Development
  
- - Install the development modules first
-   ```bash
-   cd freecad_juypter_extension/js
-   npm install --dev
-   ```
- - It's important to run the babel translation process when changing `example.js` before installing the changed module to `pip3` and the notebook:
-   ```bash
-   cd freecad_juypter_extension/js && npx babel --config-file ./.babelrc lib/example.js.babel_source -o lib/example.js && npm install && cd .. && pip3 install . && jupyter nbextension install --py --symlink --sys-prefix first_widget && jupyter nbextension enable first_widget --py --sys-prefix
-   ```
+ The relevant file can be found at [`IPythonFreeCADViewer/freecadviewer.py`](blob/master/IPythonFreeCADViewer/freecadviewer.py). Tools used for development are `pylint` for linting and `mypy` for static type checking. It can be useful to run the code inside the notebook first for faster development iterations.
+ 
+ I will continue to improve the project in the future. You can find the repository here. If you use the module and encounter any issues or just find it useful, don't hesitate to post to the [forum thread](https://forum.freecadweb.org/viewtopic.php?f=8&t=46039) or let me know with a [tweet](https://twitter.com/kryptokommunist) or an issue in the [repository](https://github.com/kryptokommunist/Jupyter_FreeCAD).
+
+Thanks to my mentors [@ickby](https://forum.freecadweb.org/memberlist.php?mode=viewprofile&u=686), [@kkremitzki](https://twitter.com/thekurtwk), [@yorik](https://twitter.com/yorikvanhavre) and the entire FreeCAD community for running such an awesome project.
