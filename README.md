@@ -44,7 +44,10 @@ Currently tested on Ubuntu 18.04.4 LTS and Debian 10 aka Buster.
     ``` 
  - Install Jupyter Notebook: `sudo apt install jupyter-notebook`
  - Clone this repository: `git clone git@github.com:kryptokommunist/Jupyter_FreeCAD.git`
- - Link external workbench from this repo to FreeCAD (use correct paths for your install): `sudo ln -s /home/kryptokommunist/Documents/Jupyter_FreeCAD/Jupyter/ /usr/shared/freecad-daily/Mod/Jupyter`
+ - Link external workbench from this repo to FreeCAD (use correct paths for your install): 
+   ```
+   sudo ln -s /home/kryptokommunist/Documents/Jupyter_FreeCAD/Jupyter/ /usr/shared/freecad-daily/Mod/Jupyter
+   ```
  - Change working directory to this folder and install requirements:
     ```bash
     pip3 install -r requirements.txt
