@@ -34,11 +34,6 @@ extensions = [
 
 source_suffix = ['.rst', '.md']
 
-from subprocess import STDOUT, check_call
-import os
-check_call(['apt-get', 'install', '-y', 'python-pivy'],
-     stdout=open(os.devnull,'wb'), stderr=STDOUT) 
-
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ['_templates']
 
