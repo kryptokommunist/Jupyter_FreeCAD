@@ -43,7 +43,7 @@ from IPython.display import display, DisplayHandle
 from typing import Union, List, Tuple
 
 HIGHLIGHTING_COLOR = (0,1,0)
-LINE_WIDTH = 10
+LINE_WIDTH = 2
 PICKER_VALID_MODES = ["mousemove", "click", "dblclick"]
 
 # types:
@@ -313,7 +313,7 @@ def get_line_geometries(geom: ThreeJSSceneGraphObjectType) -> LineSegments:
     """
     line_geom = EdgesGeometry(geom.geometry)
     lines = LineSegments(geometry=line_geom, 
-                 material=LineBasicMaterial(linewidth=5, color='#000000'))
+                 material=LineBasicMaterial(linewidth=LINE_WIDTH, color='#000000'))
     return lines
 
 def get_name(obj: Union[ThreeJSSceneGraphObjectType, None]) -> str:
@@ -566,7 +566,7 @@ def render_objects(root_node: coin.SoSeparator,
             if renderer_config.show_normals:
                 helper = VertexNormalsHelper(geom)
                 geometries.add(helper)
-            if renderer_config.show_mesh:
+            if renderer_config.show_mesh and not isinstance(geom, Line):
                 geometries.add(get_line_geometries(geom))
             else:
                 geometries.add(geom)
