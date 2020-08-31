@@ -1,6 +1,5 @@
 sphinx_rtd_theme
 m2r2
 pythreejs
-Pivy
 numpy
 ipywidgets
