@@ -477,6 +477,8 @@ class RendererConfig():
         self.show_edges = True
         self.show_faces = True
         self.show_normals = False
+        self.view_width = 600
+        self.view_height = 600
         self.selection_mode = "mousemove"
     @property
     def show_mesh(self):
@@ -515,6 +517,24 @@ class RendererConfig():
         else:
             raise TypeError("Must be bool.")
     @property
+    def view_width(self):
+        return self._view_width
+    @view_width.setter
+    def view_width(self, value):
+        if isinstance(value, int) and value > 0:
+            self._view_width = value
+        else:
+            raise TypeError("Must be int and > 0.")
+    @property
+    def view_height(self):
+        return self._view_height
+    @view_height.setter
+    def view_height(self, value):
+        if isinstance(value, int) and value > 0:
+            self._view_height = value
+        else:
+            raise TypeError("Must be int and > 0.")
+    @property
     def selection_mode(self):
         return self._selection_mode
     @selection_mode.setter
@@ -527,16 +547,27 @@ class RendererConfig():
             raise TypeError("Must be one of: {}, but got: {}".format(modes_with_none, value))
     def show_config(self):
         print(dict((x[0][1:], x[1]) for x in self.__dict__.items()))
-
-# TODO : Add displaying the FreeCAD object names to the renderer
+        
 def render_objects(root_node: coin.SoSeparator,
                    names: List[str],
                    renderer_config: RendererConfig=RendererConfig()) -> DisplayHandle:
     """
-    Renders any coin node containing LineSets or FaceSets.
+    Return a DisplayHandle rendering any coin root node of a scene graph containing LineSets
+    or FaceSets inside Jupyter notebook.
     """
-    view_width = 600
-    view_height = 600
+    renderer, html = get_objects_renderer(root_node, names, renderer_config)
+    return display(renderer, html)
+
+# TODO : Add displaying the FreeCAD object names to the renderer
+def get_objects_renderer(root_node: coin.SoSeparator,
+                   names: List[str],
+                   renderer_config: RendererConfig=RendererConfig()) -> Tuple[Renderer, HTML]:
+    """
+    Return a `Renderer` and `HTML` for rendering any coin root node of a scene graph containing LineSets
+    or FaceSets inside Jupyter notebook.
+    """
+    view_width = renderer_config.view_width
+    view_height = renderer_config.view_height
     geometries = Group()
     part_indices = [] # contains the partIndex indices that relate triangle faces to shape faces
     
@@ -592,7 +623,7 @@ def render_objects(root_node: coin.SoSeparator,
     renderer = Renderer(camera=camera,
                     scene=scene, controls=controls,
                     width=view_width, height=view_height)
-    return display(renderer, html)
+    return (renderer, html)
 
 # TODO : Add typing after finding out how to reference the document class
 def document_to_scene_graph(doc) -> Tuple[coin.SoSeparator, List[str]]:
@@ -606,6 +637,11 @@ def document_to_scene_graph(doc) -> Tuple[coin.SoSeparator, List[str]]:
 
 # TODO : Add typing after finding out how to reference the document class
 def render_document(doc, renderer_config: RendererConfig=RendererConfig()) -> DisplayHandle:
-    """Display a FreeCAD document inside an IPython environment, e.g. Jupyter Notebook"""
+    """Return a DisplayHandle rendering any FreeCAD document inside Jupyter notebook."""
     root, names = document_to_scene_graph(doc)
     return render_objects(root, names, renderer_config)
+
+def get_document_renderer(doc, renderer_config: RendererConfig=RendererConfig()) -> DisplayHandle:
+    """Return a `Renderer` and `HTML` for rendering any FreeCAD document inside Jupyter Notebook"""
+    root, names = document_to_scene_graph(doc)
+    return get_objects_renderer(root, names, renderer_config)
