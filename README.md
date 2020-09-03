@@ -41,7 +41,7 @@ The `freecadviewer` module was only tested with basic shapes from the `Part` wor
 Currently tested on Ubuntu 18.04.4 LTS and Debian 10 aka Buster.
 
 - Install FreeCAD, e.g. the daily build:
-   ```bash
+   ```
    sudo add-apt-repository ppa:freecad-maintainers/freecad-daily
    sudo apt-get update
    sudo apt-get install freecad-daily
@@ -53,20 +53,20 @@ Currently tested on Ubuntu 18.04.4 LTS and Debian 10 aka Buster.
   sudo ln -s /home/kryptokommunist/Documents/Jupyter_FreeCAD/Jupyter/ /usr/shared/freecad-daily/Mod/Jupyter
   ```
 - Change working directory to this folder and install requirements:
-  ```bash
+  ```
   pip3 install -r requirements.txt
   ```
 - Install pythreejs to the notebook:
-    ```bash
-    jupyter nbextension install --py --symlink --sys-prefix pythreejs
-    jupyter nbextension enable --py --sys-prefix pythreejs    
-    ```
+  ```
+  jupyter nbextension install --py --symlink --sys-prefix pythreejs
+  jupyter nbextension enable --py --sys-prefix pythreejs    
+  ```
 - Start Jupyter Notebook with `jupyter notebook`
 - Check if you can render the [example notebook](https://github.com/kryptokommunist/Jupyter_FreeCAD/blob/master/FreeCAD%20inside%20Jupyter%20Notebook%20-%20Examples.ipynb). It should look somewhat like [this](https://kryptokommun.ist/google-summer-of-code-2020).
  
 ### Development
  
- The relevant file can be found at [`IPythonFreeCADViewer/freecadviewer.py`](blob/master/IPythonFreeCADViewer/freecadviewer.py). Tools used for development are `pylint` for linting and `mypy` for static type checking. It can be useful to run the code inside the notebook first for faster development iterations.
+ The relevant file can be found at [IPythonFreeCADViewer/freecadviewer.py](blob/master/IPythonFreeCADViewer/freecadviewer.py). Tools used for development are `pylint` for linting and `mypy` for static type checking. It can be useful to run the code inside the notebook first for faster development iterations.
  
  I will continue to improve the project in the future. You can find the repository [here](https://github.com/kryptokommunist/Jupyter_FreeCAD). If you use the module and encounter any issues or just find it useful, don't hesitate to post to the [forum thread](https://forum.freecadweb.org/viewtopic.php?f=8&t=46039) or let me know with a [tweet](https://twitter.com/kryptokommunist) or an issue in the [repository](https://github.com/kryptokommunist/Jupyter_FreeCAD).
 
