@@ -5,8 +5,7 @@ python:
 before_install:
   - sudo apt-get update
   - sudo apt-get -y install freecad
-  - sudo apt-get -y install ipython ipython-notebook
-  - sudo -H pip install jupyter
+  - pip install jupyter
   - git clone git@github.com:kryptokommunist/Jupyter_FreeCAD.git
 before_script:
   - chmod +x "./build.sh"
