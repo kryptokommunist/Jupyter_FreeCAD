@@ -1,5 +1,5 @@
-pip3 install -r requirements.txt
-pip3 install runipy
+pip install -r requirements.txt
+pip install runipy
 python -V
 python3 -V
 python3 -m pivy.coin
