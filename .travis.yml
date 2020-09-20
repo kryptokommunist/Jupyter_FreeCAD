@@ -4,8 +4,9 @@ python:
 - '3.8'
 - '3.7'
 before_install:
-  - sudo apt-get update
-  - sudo apt-get -y install freecad python-pivy
+  - sudo add-apt-repository -y ppa:freecad-maintainers/freecad-stable
+  - sudo apt-get -y update
+  - sudo apt-get -y install freecad-python3 python-pivy
   - pip install jupyter
 before_script:
   - chmod +x "./build.sh"
